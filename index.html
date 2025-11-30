@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Precision Farming ML - Resource Optimization</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌾 Precision Farming ML</h1>
+            <p class="subtitle">Machine Learning-Based Resource Usage Optimization</p>
+        </header>
+
+        <main>
+            <div class="card">
+                <h2>📊 Farm Data Input</h2>
+                <form id="farmForm">
+                    <div class="form-grid">
+                        <!-- Soil Conditions -->
+                        <div class="form-section">
+                            <h3>🌱 Soil Conditions</h3>
+                            <div class="form-group">
+                                <label for="soil_moisture">Soil Moisture (%)</label>
+                                <input type="number" id="soil_moisture" name="soil_moisture_%" 
+                                       step="0.1" min="10" max="45" value="25.5" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="soil_pH">Soil pH</label>
+                                <input type="number" id="soil_pH" name="soil_pH" 
+                                       step="0.1" min="5.5" max="7.5" value="6.5" required>
+                            </div>
+                        </div>
+
+                        <!-- Weather Conditions -->
+                        <div class="form-section">
+                            <h3>🌤️ Weather Conditions</h3>
+                            <div class="form-group">
+                                <label for="temperature">Temperature (°C)</label>
+                                <input type="number" id="temperature" name="temperature_C" 
+                                       step="0.1" min="15" max="35" value="28" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="rainfall">Rainfall (mm)</label>
+                                <input type="number" id="rainfall" name="rainfall_mm" 
+                                       step="0.1" min="50" max="300" value="150" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="humidity">Humidity (%)</label>
+                                <input type="number" id="humidity" name="humidity_%" 
+                                       step="0.1" min="40" max="90" value="65" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="sunlight">Sunlight Hours</label>
+                                <input type="number" id="sunlight" name="sunlight_hours" 
+                                       step="0.1" min="4" max="10" value="7.5" required>
+                            </div>
+                        </div>
+
+                        <!-- Crop Information -->
+                        <div class="form-section">
+                            <h3>🌾 Crop Information</h3>
+                            <div class="form-group">
+                                <label for="crop_type">Crop Type</label>
+                                <select id="crop_type" name="crop_type" required>
+                                    <option value="Wheat">Wheat</option>
+                                    <option value="Rice">Rice</option>
+                                    <option value="Maize">Maize</option>
+                                    <option value="Cotton">Cotton</option>
+                                    <option value="Soybean">Soybean</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="total_days">Growth Period (days)</label>
+                                <input type="number" id="total_days" name="total_days" 
+                                       min="90" max="150" value="120" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ndvi">NDVI Index</label>
+                                <input type="number" id="ndvi" name="NDVI_index" 
+                                       step="0.01" min="0.3" max="0.9" value="0.65" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="disease_status">Disease Status</label>
+                                <select id="disease_status" name="crop_disease_status" required>
+                                    <option value="Healthy">Healthy</option>
+                                    <option value="Mild">Mild</option>
+                                    <option value="Severe">Severe</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Farm Management -->
+                        <div class="form-section">
+                            <h3>🚜 Farm Management</h3>
+                            <div class="form-group">
+                                <label for="region">Region</label>
+                                <select id="region" name="region" required>
+                                    <option value="North India">North India</option>
+                                    <option value="South India">South India</option>
+                                    <option value="Central USA">Central USA</option>
+                                    <option value="South USA">South USA</option>
+                                    <option value="East Africa">East Africa</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="irrigation_type">Irrigation Type</label>
+                                <select id="irrigation_type" name="irrigation_type" required>
+                                    <option value="Drip">Drip</option>
+                                    <option value="Sprinkler">Sprinkler</option>
+                                    <option value="None">None</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="fertilizer_type">Fertilizer Type</label>
+                                <select id="fertilizer_type" name="fertilizer_type" required>
+                                    <option value="Organic">Organic</option>
+                                    <option value="Urea">Urea</option>
+                                    <option value="NPK">NPK</option>
+                                    <option value="DAP">DAP</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">
+                            🔮 Get Recommendations
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                            🔄 Reset Form
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="loadingIndicator" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Analyzing farm data...</p>
+            </div>
+
+            <div id="results" class="results" style="display: none;">
+                <div class="card">
+                    <h2>📈 Resource Optimization Results</h2>
+
+                    <div class="results-grid">
+                        <div class="result-card">
+                            <div class="result-icon">💧</div>
+                            <h3>Water Requirement</h3>
+                            <p class="result-value" id="waterResult">-</p>
+                            <p class="result-unit">mm per day</p>
+                            <p class="result-recommendation" id="waterRec">-</p>
+                        </div>
+
+                        <div class="result-card">
+                            <div class="result-icon">🧪</div>
+                            <h3>Fertilizer Requirement</h3>
+                            <p class="result-value" id="fertilizerResult">-</p>
+                            <p class="result-unit">kg per hectare per week</p>
+                            <p class="result-recommendation" id="fertilizerRec">-</p>
+                        </div>
+
+                        <div class="result-card">
+                            <div class="result-icon">🌾</div>
+                            <h3>Expected Yield</h3>
+                            <p class="result-value" id="yieldResult">-</p>
+                            <p class="result-unit">kg per hectare</p>
+                        </div>
+                    </div>
+
+                    <div class="optimization-tips">
+                        <h3>💡 Yield Optimization Tips</h3>
+                        <ul id="tipsList"></ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>© 2024 Precision Farming ML | Powered by Machine Learning</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
